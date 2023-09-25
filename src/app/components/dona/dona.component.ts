@@ -27,8 +27,5 @@ export class DonaComponent implements OnInit {
   public doughnutChartType: ChartType = 'doughnut';
 
   ngOnInit(): void {
-    console.log(this.title)
-    console.log(this.doughnutChartLabels)
-    console.log(this.data)
   }
 }

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/services/sidebar.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,8 +15,13 @@ export class SidebarComponent {
 
   constructor(
     private sidebarService: SidebarService,
+    private userService: UserService,
   ) {
     this.menuItems = this.sidebarService.menu;
+  }
+
+  logout() {
+    this.userService.logout();
   }
 
 }

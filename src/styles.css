@@ -9,3 +9,36 @@
 #themecolors .selector, .cursor {
   cursor: pointer;
 }
+
+.img-avatar {
+  width: 20rem;
+  height: 20rem
+}
+
+.w100 {
+  width: 10rem;
+}
+
+.w140 {
+  width: 14rem;
+}
+
+.avatar {
+  border-radius: 100%;
+  border: 1px solid grey;
+  width: 35px;
+}
+
+.oculto {
+  display: none;
+}
+
+.fondo-modal-imagen {
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  left: 0px;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  z-index: 9999;
+}

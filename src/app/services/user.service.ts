@@ -7,23 +7,33 @@ import { environment } from 'src/environments/enviroment';
 import { RegisterForm } from '../interfaces/register-form.interfaces';
 import { LoginForm } from '../interfaces/login-form.interfaces';
 import { Router } from '@angular/router';
+import { User } from '../models/user.model';
 
 declare const google: any;
 
 const base_url = environment.base_url;
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  auth2: any;
+
+  public auth2: any;
+  public user: User | undefined;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private ngZone: NgZone,
   ) { }
+
+  get token(): string {
+    return localStorage.getItem('token') || '';
+  }
+
+  get uidUser(): string {
+    return this.user?.uid || '';
+  }
 
   newUser( formData: RegisterForm ) {
     return this.http.post(`${base_url}/users`, formData )
@@ -53,17 +63,16 @@ export class UserService {
   }
 
   renewToken():Observable<boolean> {
-    const token = localStorage.getItem('token') || '';
-    const headers = {
-      'x-token': token
-    };
+    const headers = { 'x-token': this.token };
 
     return this.http.post(`${base_url}/login/renew`, {}, { headers })
       .pipe(
-        tap((resp: any) => {
+        map((resp: any) => {
+          const { email, google, name, role, img, uid } = resp.user;
+          this.user = new User( name, email, '', google, img, role, uid )
           localStorage.setItem('token', resp.token);
+          return true
         }),
-        map(resp => true),
         catchError( error => of(false))
       );
   }
@@ -71,15 +80,51 @@ export class UserService {
   logout() {
     localStorage.removeItem('token');
 
-    google.accounts.id.revoke('ma.teresa.garcia.arraztoa@gmail.com', () => {
-      this.ngZone.run(() => {
-        this.router.navigateByUrl('/login');
+    if ( this.user?.google ) {
+      google.accounts.id.revoke(this.user.email, () => {
+        this.ngZone.run(() => {
+          this.router.navigateByUrl('/login');
+        });
       });
-    });
+    }
+    this.router.navigateByUrl('/login');
+  }
 
-    // gloogle.accounts.id.revoke( 'mt.garcia.arr@gmail.com', () => {})
+  putProfile( user: User ) {
+    const headers = { 'x-token': this.token };
+
+    return this.http.put(`${base_url}/users/${this.uidUser}`, user, { headers } )
+  }
+
+  loadUser( desde: number = 0) {
+    const headers = { 'x-token': this.token };
+
+    return this.http.get<{ total: number, users: User[]}>
+      (`${base_url}/users?desde=${desde}`, { headers } )
+      .pipe(
+        map( resp => {
+          const users = resp.users.map(
+            user => new User( user.name, user.email, '', user.google, user.img, user.role, user.uid ) )
+
+          return { total: resp.total, users}
+        })
+      )
 
   }
+
+  deleteUser( uuid: string) {
+    const headers = { 'x-token': this.token };
+
+    return this.http.delete(`${base_url}/users/${uuid }`, { headers } )
+
+  }
+
+  putUser( user: User ) {
+    const headers = { 'x-token': this.token };
+
+    return this.http.put(`${base_url}/users/${user.uid}`, user, { headers } )
+  }
+
 
 }
 

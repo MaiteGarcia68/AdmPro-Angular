@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from '../app-routing.module';
 import { ComponentsModule } from '../components/components.module';
@@ -13,6 +13,8 @@ import { SharedModule } from '../shared/shared.module';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { PromesaComponent } from './promesa/promesa.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
+import { ProfileComponent } from './profile/profile.component';
+import { UserComponent } from './mantenimientos/user/user.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { RxjsComponent } from './rxjs/rxjs.component';
     AccountSettingsComponent,
     PromesaComponent,
     RxjsComponent,
+    ProfileComponent,
+    UserComponent,
   ],
   exports: [
     DashboardComponent,
@@ -37,6 +41,7 @@ import { RxjsComponent } from './rxjs/rxjs.component';
     AppRoutingModule,
     FormsModule,
     ComponentsModule,
+    ReactiveFormsModule,
   ]
 })
 export class PagesModule { }

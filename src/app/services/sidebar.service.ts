@@ -18,11 +18,12 @@ export class SidebarService {
       ]
     },
     {
-      title: 'Otro Menu',
-      icon: 'mdi mdi-gauge',
+      title: 'Mantenimientos',
+      icon: 'mdi mdi-folder-lock-open',
       subMenu: [
-        { title: 'Principal', url: '/' },
-        { title: 'Grafica', url: 'grafica1' },
+        { title: 'Usuarios', url: './users' },
+        { title: 'Hospitales', url: './hospitals' },
+        { title: 'Medicos', url: './doctors' },
       ]
     },
   ];
